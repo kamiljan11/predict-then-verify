@@ -1,0 +1,11 @@
+# narzedzia budowania/weryfikacji, nie czesc produktu
+_build_*.js
+_check.js
+_scrub.js
+
+# nic osobistego nigdy
+*.progress.json
+progress-*.json
+.env
+.DS_Store
+Thumbs.db
