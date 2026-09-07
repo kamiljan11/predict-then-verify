@@ -2,9 +2,23 @@
 
 A single-file, offline trainer for **reading** code — not writing it. You get a snippet, you predict what it outputs **before** you run it, then you verify. Wrong predictions are the point: they show you exactly where your mental model of the language is broken.
 
-![screenshot](docs/screenshot.png)
-
 **Open `index.html` in a browser. That's the whole install.** No build step, no server, no account, no data leaving your machine.
+
+```
+🗡️ Predict Then Verify                    LEVEL 1 · XP 0/100 · Variable Reader · STREAK 0
+
+  1  COLD RECALL            Answer from memory, then reveal the key and mark yourself honestly.
+  2  ENCOUNTER — PREDICTION  Arithmetic runs in a fixed order: multiplication and division
+                             before addition and subtraction.
+
+     let fuel  = 100;                    ❓ Before running it: what lands in the console?
+     let burn  = 15;                     🔒 The button unlocks once you write a prediction.
+     let jumps = 6;
+     let left  = fuel - burn * jumps;    [ Your prediction... ]
+     console.log(left);                  [ Reveal the result and run both snippets ]
+
+  3  QUIZ, NO HINTS          Unlocks after your prediction.                        +5 / correct
+```
 
 ---
 
@@ -38,7 +52,7 @@ That is it. Your progress lives in your browser's `localStorage`. Nothing is upl
 
 **Grading with a model (optional).** Paste your own Anthropic API key in **Settings**. Then answers are graded by a model, and two extra features come alive: the **Mentor** chat (asks you guiding questions without spoiling the answer) and the **Interview simulator**. The key is stored only in your browser's `localStorage` and is sent only to the provider's API. Never commit it anywhere.
 
-**Language.** Full PL/EN toggle for the interface in **Settings**. Note: the bundled lesson content is currently Polish — an English content pack is in progress.
+**Language.** Full PL/EN toggle in **Settings** — interface, rank names and lesson content all switch. English ships with a verified starter set of 8 encounters (operator precedence, `==` vs `===`, mutating an array mid-loop, pass-by-reference, `sort()` traps, shallow copy, silent `catch`, reading a diff for behaviour). Polish ships with the full bank. Every bundled output in both sets was produced by actually executing the snippet, never guessed.
 
 **What is inside**
 
