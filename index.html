@@ -962,10 +962,23 @@ async function editWinFile(path, oldStr, newStr){
   return { ok:true };
 }
 /* eksport / import calego postepu — zeby nic nie przepadlo przy czyszczeniu przegladarki */
+/* dane uwierzytelniajace (klucz API itp.) zyja tylko w tej przegladarce — nie trafiaja do pliku postepu */
+const SECRET_FIELD_RE = /key|token|secret/i;
+function stripSecretFields(obj){
+  const out={};
+  if(!obj || typeof obj!=="object" || Array.isArray(obj)) return out;
+  Object.keys(obj).forEach(k=>{ if(!SECRET_FIELD_RE.test(k)) out[k]=obj[k]; });
+  return out;
+}
+/* wartosc klucza localStorage -> wartosc bezpieczna do eksportu/importu (tylko crq.config jest filtrowany) */
+function sanitizeKeyValue(k, raw){
+  if(k!==CFG_KEY) return raw;
+  try{ return JSON.stringify(stripSecretFields(JSON.parse(raw))); }catch(e){ return "{}"; }
+}
 function exportProgress(){
   const dump={ _app:"code-reading-quest", _v:1, _at:new Date().toISOString(), files:{}, keys:{} };
   vfsList().forEach(p=>{ dump.files[p]=vfsRead(p); });
-  try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.indexOf(VFS_PREFIX)!==0) dump.keys[k]=localStorage.getItem(k); } }catch(e){}
+  try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.indexOf(VFS_PREFIX)!==0) dump.keys[k]=sanitizeKeyValue(k, localStorage.getItem(k)); } }catch(e){}
   const blob=new Blob([JSON.stringify(dump,null,2)],{type:"application/json"});
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
   a.download="code-reading-quest-progress-"+todayStr()+".json"; a.click();
@@ -976,7 +989,12 @@ function importProgress(file, cb){
     const d=JSON.parse(fr.result);
     if(!d || d._app!=="code-reading-quest") throw new Error("to nie jest plik postepu tej aplikacji");
     Object.keys(d.files||{}).forEach(p=>vfsWrite(p, d.files[p]));
-    Object.keys(d.keys||{}).forEach(k=>{ try{ localStorage.setItem(k, d.keys[k]); }catch(e){} });
+    Object.keys(d.keys||{}).forEach(k=>{ try{
+      if(k===CFG_KEY){ /* ustawienia: scal z lokalnymi, pola z danymi uwierzytelniajacymi zostaja lokalne */
+        let inc={}; try{ inc=stripSecretFields(JSON.parse(d.keys[k])); }catch(e){}
+        localStorage.setItem(k, JSON.stringify(Object.assign(cfgGet(), inc)));
+      } else localStorage.setItem(k, d.keys[k]);
+    }catch(e){} });
     cb && cb(null);
   }catch(e){ cb && cb(e); } };
   fr.readAsText(file);

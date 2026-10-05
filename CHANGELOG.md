@@ -7,6 +7,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The repo has n
 ### Added
 - Handover documentation: README sections (data and storage, testing), `docs/RUNBOOK.md`, this changelog.
 
+### Security
+- Progress export no longer includes credentials (settings fields whose names match key/token/secret are skipped).
+- Progress import does not overwrite locally stored credentials; export files are ignored by git (`*-progress-*.json`).
+
 ## 2026-09-07
 
 ### Added
