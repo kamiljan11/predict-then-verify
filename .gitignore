@@ -9,3 +9,6 @@ progress-*.json
 .env
 .DS_Store
 Thumbs.db
+
+# eksporty postepu (zawieraja dane uzytkownika)
+*-progress-*.json
