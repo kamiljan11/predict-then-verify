@@ -70,6 +70,16 @@ That is it. Your progress lives in your browser's `localStorage`. Nothing is upl
 
 ---
 
+## Data and storage
+
+All state is in the browser's `localStorage`: settings (`crq.config`), XP/rank/streak (`crq_game_v3`), interview simulator state (`ccc_sim_v1`) and progress files (`crq.vfs::*`). **Export progress** writes this data to a plain JSON file named `code-reading-quest-progress-<date>.json`. Keep exported files private and do not commit them to a repository.
+
+The only network call the app makes on its own is the optional grading/mentor request to the Anthropic Messages API (default model `claude-sonnet-4-5`), and only after you add a key in Settings. The Course and Intel tabs contain plain links that open external sites.
+
+## Testing
+
+There is no automated test suite and no build. Manual check after a change: open `index.html`, complete one daily loop (recall, prediction, reveal, quiz), switch PL/EN in Settings, export and re-import progress.
+
 ## Contributing
 
 ```bash
